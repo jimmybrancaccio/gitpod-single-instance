@@ -30,6 +30,6 @@ helm upgrade \
 echo "Create certificates..."
 kubectl apply -f ./certificate.yaml
 
-#kubectl apply -f ./out.yaml
-
-gitpod-installer render -c config.yaml | kubectl apply -f -
+# gitpod-installer render --config gitpod.config.yaml > gitpod.yaml
+kubectl apply -f gitpod.yaml
+kubectl apply -f ingress.yaml

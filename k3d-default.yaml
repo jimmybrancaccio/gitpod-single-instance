@@ -6,6 +6,7 @@ metadata:
 servers: 1
 agents: 2
 image: k3s
+subnet: "172.24.0.0/16"
 volumes:
   - volume: /usr/src:/usr/src
     nodeFilters:
@@ -13,25 +14,22 @@ volumes:
   - volume: /etc/hosts:/etc/hosts
     nodeFilters:
       - agent:1
-#  - volume: /sys/fs/cgroup:/sys/fs/cgroup
-#    nodeFilters:
-#      - agent:1
   - volume: /tmp/gitpod:/var/gitpod/workspaces:shared
     nodeFilters:
       - agent:1
-#  - volume: /proc/60:/proc/60:shared
-#    nodeFilters:
-#      - agent:1
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
 options:
   k3d:
     wait: true
-    disableLoadbalancer: true
+    disableLoadbalancer: false
     disableRollback: true
   k3s:
-    extraArgs:
-      - arg: --no-deploy=traefik
-        nodeFilters:
-          - server:*
     nodeLabels:
       - label: gitpod.io/workload_meta=true
         nodeFilters:
