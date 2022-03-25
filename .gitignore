@@ -2,3 +2,4 @@
 .gitpod.yaml
 fullchain.pem
 privkey.pem
+gitpod.config.yaml
