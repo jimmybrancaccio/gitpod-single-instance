@@ -6,6 +6,12 @@ metadata:
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  tls:
+    - hosts:
+      - gitpod.work
+      - "*.gitpod.work"
+      - "*.ws.gitpod.work"
+      secretName: https-certificates
   rules:
   - http:
       paths:
@@ -15,4 +21,4 @@ spec:
           service:
             name: proxy
             port:
-              number: 80
+              number: 444

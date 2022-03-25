@@ -1,1 +1,4 @@
 .idea
+.gitpod.yaml
+fullchain.pem
+privkey.pem
