@@ -21,4 +21,4 @@ spec:
           service:
             name: proxy
             port:
-              number: 444
+              number: 443
