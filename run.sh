@@ -2,6 +2,8 @@
 
 # Team Quickpod
 #
+# curl https://raw.githubusercontent.com/MrSimonEmms/gitpod-single-instance/develop/run.sh | bash
+#
 # This was done on the Gitpod 2022 off-site hackathon in Ericeira, Portugal by
 # Lucas Valtl, Simon Emms and Jurgen Leschner.
 #
@@ -32,7 +34,7 @@ color() {
    msg="$msg$(color $logoColor "    @@@*****,,,,,,,@@@@@@@@@@@/#@@@@")$(color $textColor "    In a few minutes, your installation will be complete. In the meantime,")\n"
    msg="$msg$(color $logoColor "    @@********/@@@@@@@@@@,,,,,,,,,,@")$(color $textColor "    have a look through our documentation https://www.gitpod.io/docs")\n"
    msg="$msg$(color $logoColor "    @%******@@@@@@@@%,,,,,,,,,,,,,,@")\n"
-   msg="$msg$(color $logoColor "    @%******@@@@@/******,,,,,,,,,,,@")$(color $textColor "    Your installation will be at: https://localhost}")\n"
+   msg="$msg$(color $logoColor "    @%******@@@@@/******,,,,,,,,,,,@")$(color $textColor "    Your installation will be at: https://localhost")\n"
    msg="$msg$(color $logoColor "    @%******@@@@@********@@@@,,,,,,@")\n"
    msg="$msg$(color $logoColor "    @%******@@@@@@@@@@@@@@@@@***,,,@")$(color $textColor "    Run ")$( color $codeColor "kubectl get pods")\n"
    msg="$msg$(color $logoColor "    @@********#@@@@@@@@@@@/********@")$(color $textColor "    to check the status of your installation.")\n"
@@ -44,14 +46,14 @@ color() {
  }
 
 
-function installer() {
-  docker run -it --rm \
-    -v="${HOME}/.kube:${HOME}/.kube" \
-    -v="${PWD}:${PWD}" \
-    -w="${PWD}" \
-    "eu.gcr.io/gitpod-core-dev/build/installer:${INSTALLER_VERSION}" \
-    "${@}"
-}
+# function installer() {
+#   docker run --rm \
+#     -v="${HOME}/.kube:${HOME}/.kube" \
+#     -v="${PWD}:${PWD}" \
+#     -w="${PWD}" \
+#     "eu.gcr.io/gitpod-core-dev/build/installer:${INSTALLER_VERSION}" \
+#     "${@}"
+# }
 
 if ! command -v docker &> /dev/null; then
   echo "docker could not be found - please visit https://docs.docker.com/get-docker/ for installation instructions"
@@ -106,16 +108,17 @@ echo "Create certificates..."
 kubectl apply -f ./certificate.yaml
 kubectl create secret tls https-certificates --key="privkey.pem" --cert="fullchain.pem"
 
-# CONFIG_FILE="${DIR}/gitpod.config.yaml"
+CONFIG_FILE="${DIR}/gitpod.config.yaml"
+# @todo(sje) generate from installer
 # installer init > "${CONFIG_FILE}"
-
+#
 # yq e -i '.domain = "localhost"' "${CONFIG_FILE}"
 # yq e -i '.workspace.runtime.containerdRuntimeDir = "/run/k3s/containerd/io.containerd.runtime.v2.task/k8s.io"' "${CONFIG_FILE}"
 # yq e -i '.workspace.runtime.containerdSocket = "/run/k3s/containerd/containerd.sock"' "${CONFIG_FILE}"
 
 # @todo(sje) generate from installer
 # @todo(sje) remove mountPropagation == HostToContainer options
-#installer render --config="${CONFIG_FILE}" --no-validation > gitpod.yaml
+# installer render --config="${CONFIG_FILE}" --no-validation > gitpod.yaml
 
 # gitpod-installer render --config gitpod.config.yaml > gitpod.yaml
 kubectl apply -f gitpod.yaml
